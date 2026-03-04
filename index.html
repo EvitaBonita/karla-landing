@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karla spol. s r.o. — Holding</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --steel: #1a1f2e;
+    --iron: #252b3b;
+    --chrome: #c8d0e0;
+    --accent: #cc1111;
+    --red: #d01010;
+    --light: #e8ecf4;
+    --muted: #6b7591;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--steel);
+    color: var(--light);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(204,17,17,0.07) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .top-line {
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    animation: fadeIn 1s 0.2s forwards;
+  }
+
+  .logo-block {
+    text-align: center;
+    margin-bottom: 1.2rem;
+    opacity: 0;
+    animation: slideUp 0.9s 0.4s forwards;
+  }
+
+  .logo-img {
+    width: 160px;
+    height: auto;
+    margin: 0 auto 0.5rem;
+    display: block;
+    filter: drop-shadow(0 4px 24px rgba(204,17,17,0.25));
+  }
+
+  .logo-sub {
+    font-size: 0.78rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    font-weight: 500;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 500px;
+    margin: 2.5rem auto;
+    opacity: 0;
+    animation: fadeIn 0.8s 0.8s forwards;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200,208,224,0.3));
+  }
+  .divider::after {
+    background: linear-gradient(90deg, rgba(200,208,224,0.3), transparent);
+  }
+
+  .divider-diamond {
+    width: 6px;
+    height: 6px;
+    background: var(--red);
+    transform: rotate(45deg);
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    animation: fadeIn 0.8s 1s forwards;
+  }
+
+  .subtitle strong {
+    color: var(--chrome);
+    font-weight: 600;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+    opacity: 0;
+    animation: slideUp 0.9s 1.2s forwards;
+  }
+
+  .card {
+    background: var(--iron);
+    border: 1px solid rgba(200,208,224,0.08);
+    border-radius: 4px;
+    padding: 2.5rem 1.8rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--red), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card.clickable {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card.clickable:hover {
+    border-color: rgba(204,17,17,0.35);
+    transform: translateY(-4px);
+  }
+
+  .card.no-link {
+    opacity: 0.65;
+    cursor: default;
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    border: 1px solid rgba(107,117,145,0.3);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+  }
+
+  .card-badge.soon {
+    color: var(--red);
+    border-color: rgba(204,17,17,0.4);
+  }
+
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-icon svg { width: 52px; height: 52px; }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem;
+    letter-spacing: 0.1em;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .card-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+
+  .card-arrow {
+    margin-top: auto;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card.clickable:hover .card-arrow { opacity: 1; }
+  .card-arrow::after { content: '→'; }
+
+  .bottom-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200,208,224,0.15), transparent);
+    margin-top: 3.5rem;
+    opacity: 0;
+    animation: fadeIn 1s 1.8s forwards;
+  }
+
+  .footer-text {
+    margin-top: 1.2rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 1s 2s forwards;
+    margin-bottom: 2rem;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 700px) {
+    .cards { grid-template-columns: 1fr; max-width: 360px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-line"></div>
+
+  <div class="logo-block">
+    <img class="logo-img" src="Untitled design (3).png" alt="Karla spol. s r.o." />
+    <div class="logo-sub">Průmyslový holding</div>
+  </div>
+
+  <div class="divider"><div class="divider-diamond"></div></div>
+
+  <div class="subtitle">Naše firmy v holdingu &nbsp;<strong>Karla Logistics</strong></div>
+
+  <div class="cards">
+
+    <a href="https://www.wolframium.cz/" target="_blank" class="card clickable">
+      <div class="card-badge">Aktivní</div>
+      <div class="card-icon">
+        <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="26" cy="26" r="22" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.05)"/>
+          <path d="M14 18 L20 34 L26 22 L32 34 L38 18" stroke="#cc1111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="26" cy="26" r="3" fill="rgba(204,17,17,0.3)" stroke="#cc1111" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="card-title">Wolframium</div>
+      <div class="card-desc">Výroba a recyklace wolframového pražence. Zpracování wolframových odpadů pro průmyslové využití.</div>
+      <div class="card-arrow">Navštívit</div>
+    </a>
+
+    <div class="card no-link">
+      <div class="card-badge">Mateřská společnost</div>
+      <div class="card-icon">
+        <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="26,4 48,16 48,36 26,48 4,36 4,16" stroke="rgba(200,208,224,0.5)" stroke-width="1.2" fill="rgba(200,208,224,0.04)"/>
+          <polygon points="26,12 40,20 40,32 26,40 12,32 12,20" stroke="rgba(200,208,224,0.25)" stroke-width="0.8" fill="none"/>
+          <text x="26" y="31" font-family="Bebas Neue, sans-serif" font-size="16" fill="rgba(200,208,224,0.7)" text-anchor="middle" letter-spacing="1">K</text>
+        </svg>
+      </div>
+      <div class="card-title">Karla spol.</div>
+      <div class="card-desc">Mateřská holdingová společnost sdružující průmyslové divize pod jednotnou strategii.</div>
+    </div>
+
+    <div class="card" style="opacity:0.55; cursor:default;">
+      <div class="card-badge soon">Brzy</div>
+      <div class="card-icon">
+        <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="18" width="36" height="20" rx="2" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.05)"/>
+          <path d="M40 24 L48 28 L48 38 L40 38" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.08)"/>
+          <circle cx="14" cy="40" r="4" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.1)"/>
+          <circle cx="36" cy="40" r="4" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.1)"/>
+          <path d="M8 18 L12 10 L28 10 L28 18" stroke="#cc1111" stroke-width="1" stroke-dasharray="3 2"/>
+        </svg>
+      </div>
+      <div class="card-title">Karla Logistics</div>
+      <div class="card-desc">Logistická divize holdingu. Stránky jsou aktuálně ve vývoji a budou brzy dostupné.</div>
+    </div>
+
+  </div>
+
+  <div class="bottom-line"></div>
+  <div class="footer-text">© 2026 Karla spol. s r.o. — Všechna práva vyhrazena</div>
+</div>
+</body>
+</html>
