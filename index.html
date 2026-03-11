@@ -1,338 +1,944 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Karla spol. s r.o. — Holding</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --steel: #1a1f2e;
-    --iron: #252b3b;
-    --chrome: #c8d0e0;
-    --accent: #cc1111;
-    --red: #d01010;
-    --light: #e8ecf4;
-    --muted: #6b7591;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <!-- SEO — text z docs/content-source.md -->
+  <title>Karla Logistic — Paletové skladování Bruntál | Moravskoslezský kraj</title>
+  <meta name="description" content="Moderní paletové skladování pro výrobní firmy z regionu i z Polska. Kapacita 11 000 paletových míst, certifikát ISO 9001. Bruntál, Moravskoslezský kraj.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="TODO: canonical URL">
 
-  body {
-    background: var(--steel);
-    color: var(--light);
-    font-family: 'Barlow', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  <!-- OpenGraph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:locale"      content="cs_CZ">
+  <meta property="og:title"       content="Karla Logistic — Paletové skladování Bruntál">
+  <meta property="og:description" content="Moderní paletové skladování pro výrobní firmy z regionu i z Polska. Kapacita 11 000 paletových míst, ISO 9001.">
+  <meta property="og:url"         content="TODO: canonical URL">
+  <meta property="og:site_name"   content="Karla Logistic">
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(204,17,17,0.07) 0%, transparent 60%),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-  }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+  <!-- Tailwind CDN (Play CDN — pouze pro vývoj; pro prod nahradit build toolem) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'brand-red':   '#E01020',
+            'brand-black': '#181818',
+            'brand-gray':  '#505050',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          maxWidth: {
+            container: '72rem',
+          },
+        }
+      }
+    }
+  </script>
 
-  .top-line {
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--red), transparent);
-    margin-bottom: 3.5rem;
-    opacity: 0;
-    animation: fadeIn 1s 0.2s forwards;
-  }
+  <style>
+    :root {
+      --red:     #E01020;
+      --black:   #181818;
+      --gray:    #505050;
+      --red-hover: #C00E1C;
+    }
 
-  .logo-block {
-    text-align: center;
-    margin-bottom: 1.2rem;
-    opacity: 0;
-    animation: slideUp 0.9s 0.4s forwards;
-  }
+    html { scroll-behavior: smooth; }
 
-  .logo-img {
-    width: 160px;
-    height: auto;
-    margin: 0 auto 0.5rem;
-    display: block;
-    filter: drop-shadow(0 4px 24px rgba(204,17,17,0.25));
-  }
+    /* Globální focus styl (WCAG) */
+    *:focus-visible {
+      outline: 2px solid var(--red);
+      outline-offset: 3px;
+    }
 
-  .logo-sub {
-    font-size: 0.78rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 0.4rem;
-    font-weight: 500;
-  }
+    /* Scrim nad videem — zajišťuje kontrast 4.5:1 pro bílý text */
+    .hero-scrim {
+      background: linear-gradient(
+        160deg,
+        rgba(24, 24, 24, 0.82) 0%,
+        rgba(24, 24, 24, 0.65) 60%,
+        rgba(24, 24, 24, 0.75) 100%
+      );
+    }
 
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-    max-width: 500px;
-    margin: 2.5rem auto;
-    opacity: 0;
-    animation: fadeIn 0.8s 0.8s forwards;
-  }
+    /* Mobilní menu transition */
+    #mobile-menu {
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+    #mobile-menu.open {
+      max-height: 400px;
+      opacity: 1;
+    }
 
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(200,208,224,0.3));
-  }
-  .divider::after {
-    background: linear-gradient(90deg, rgba(200,208,224,0.3), transparent);
-  }
+    /* Formulář — placeholder barva */
+    .form-input::placeholder { color: rgba(255,255,255,0.3); }
+    .form-input:focus { border-color: var(--red); outline: none; }
 
-  .divider-diamond {
-    width: 6px;
-    height: 6px;
-    background: var(--red);
-    transform: rotate(45deg);
-  }
+    /* Honeypot */
+    .hp-field { position: absolute; left: -9999px; }
 
-  .subtitle {
-    text-align: center;
-    font-size: 0.85rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 500;
-    margin-bottom: 3.5rem;
-    opacity: 0;
-    animation: fadeIn 0.8s 1s forwards;
-  }
+    /* Poloha grid */
 
-  .subtitle strong {
-    color: var(--chrome);
-    font-weight: 600;
-  }
+    /* ── Scroll reveal ────────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: no-preference) {
+      [data-reveal] {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.65s ease, transform 0.65s ease;
+      }
+      [data-reveal="left"]  { transform: translateX(-36px); }
+      [data-reveal="right"] { transform: translateX(36px);  }
+      [data-reveal].is-visible { opacity: 1; transform: none; }
 
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    width: 100%;
-    opacity: 0;
-    animation: slideUp 0.9s 1.2s forwards;
-  }
-
-  .card {
-    background: var(--iron);
-    border: 1px solid rgba(200,208,224,0.08);
-    border-radius: 4px;
-    padding: 2.5rem 1.8rem 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s, transform 0.3s;
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--red), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .card:hover::before { opacity: 1; }
-
-  .card.clickable {
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .card.clickable:hover {
-    border-color: rgba(204,17,17,0.35);
-    transform: translateY(-4px);
-  }
-
-  .card.no-link {
-    opacity: 0.65;
-    cursor: default;
-  }
-
-  .card-badge {
-    position: absolute;
-    top: 0.9rem;
-    right: 0.9rem;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 600;
-    border: 1px solid rgba(107,117,145,0.3);
-    padding: 0.2rem 0.5rem;
-    border-radius: 2px;
-  }
-
-  .card-badge.soon {
-    color: var(--red);
-    border-color: rgba(204,17,17,0.4);
-  }
-
-  .card-icon {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .card-icon svg { width: 52px; height: 52px; }
-
-  .card-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.7rem;
-    letter-spacing: 0.1em;
-    text-align: center;
-    line-height: 1;
-  }
-
-  .card-desc {
-    font-size: 0.78rem;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.6;
-    letter-spacing: 0.02em;
-  }
-
-  .card-arrow {
-    margin-top: auto;
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--red);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 600;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .card.clickable:hover .card-arrow { opacity: 1; }
-  .card-arrow::after { content: '→'; }
-
-  .bottom-line {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(200,208,224,0.15), transparent);
-    margin-top: 3.5rem;
-    opacity: 0;
-    animation: fadeIn 1s 1.8s forwards;
-  }
-
-  .footer-text {
-    margin-top: 1.2rem;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    text-transform: uppercase;
-    opacity: 0;
-    animation: fadeIn 1s 2s forwards;
-    margin-bottom: 2rem;
-  }
-
-  @keyframes fadeIn { to { opacity: 1; } }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 700px) {
-    .cards { grid-template-columns: 1fr; max-width: 360px; }
-  }
-</style>
+      [data-delay="1"] { transition-delay: 0.12s; }
+      [data-delay="2"] { transition-delay: 0.24s; }
+      [data-delay="3"] { transition-delay: 0.36s; }
+    }
+  </style>
 </head>
-<body>
-<div class="container">
-  <div class="top-line"></div>
 
-  <div class="logo-block">
-    <img class="logo-img" src="Untitled design (3).png" alt="Karla spol. s r.o." />
-    <div class="logo-sub">Průmyslový holding</div>
-  </div>
+<body class="font-sans bg-white text-[#181818] antialiased">
 
-  <div class="divider"><div class="divider-diamond"></div></div>
+  <!-- ===================== NAVIGACE ===================== -->
+  <header>
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 bg-[#181818]/95 backdrop-blur-sm border-b border-white/10"
+      aria-label="Hlavní navigace"
+    >
+      <div class="max-w-container mx-auto px-4 lg:px-8">
+        <div class="flex items-center justify-between h-16">
 
-  <div class="subtitle">Naše firmy v holdingu &nbsp;<strong>Karla Logistics</strong></div>
+          <!-- Logo -->
+          <a href="#hero" class="flex items-center gap-3 flex-shrink-0" aria-label="Karla Logistic — zpět na úvod">
+            <img
+              src="KARLA LOGO.png"
+              alt="Karla Logistic"
+              class="h-8 w-auto"
+              width="32" height="32"
+            >
+            <span class="text-white font-semibold text-sm tracking-wide leading-none">
+              Karla<br><span class="text-[#E01020]">Logistics</span>
+            </span>
+          </a>
 
-  <div class="cards">
+          <!-- Desktop navigace -->
+          <div class="hidden md:flex items-center gap-7 text-sm text-white/75 font-medium">
+            <a href="#o-skladu"       class="hover:text-white transition-colors duration-150">O skladu</a>
+            <a href="#infrastruktura" class="hover:text-white transition-colors duration-150">Infrastruktura</a>
+            <a href="#poloha"         class="hover:text-white transition-colors duration-150">Poloha</a>
+            <a href="#klienti"        class="hover:text-white transition-colors duration-150">Klienti</a>
+          </div>
 
-    <a href="https://www.wolframium.cz/" target="_blank" class="card clickable">
-      <div class="card-badge">Aktivní</div>
-      <div class="card-icon">
-        <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="26" cy="26" r="22" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.05)"/>
-          <path d="M14 18 L20 34 L26 22 L32 34 L38 18" stroke="#cc1111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="26" cy="26" r="3" fill="rgba(204,17,17,0.3)" stroke="#cc1111" stroke-width="1"/>
-        </svg>
+          <!-- CTA + hamburger -->
+          <div class="flex items-center gap-3">
+            <a
+              href="#kontakt"
+              class="bg-[#E01020] text-white text-sm font-semibold px-5 py-2.5 hover:bg-[#C00E1C] transition-colors duration-150"
+            >
+              Kontaktujte nás
+            </a>
+            <!-- Hamburger (mobile) -->
+            <button
+              id="menu-btn"
+              class="md:hidden text-white p-2 hover:text-[#E01020] transition-colors"
+              aria-label="Otevřít navigaci"
+              aria-expanded="false"
+              aria-controls="mobile-menu"
+            >
+              <svg id="icon-open"  class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobile-menu" role="navigation" aria-label="Mobilní navigace">
+          <div class="flex flex-col py-3 gap-1 border-t border-white/10">
+            <a href="#o-skladu"       class="text-white/80 hover:text-white px-2 py-2.5 text-sm font-medium transition-colors" onclick="closeMenu()">O skladu</a>
+            <a href="#infrastruktura" class="text-white/80 hover:text-white px-2 py-2.5 text-sm font-medium transition-colors" onclick="closeMenu()">Infrastruktura</a>
+            <a href="#poloha"         class="text-white/80 hover:text-white px-2 py-2.5 text-sm font-medium transition-colors" onclick="closeMenu()">Poloha</a>
+            <a href="#klienti"        class="text-white/80 hover:text-white px-2 py-2.5 text-sm font-medium transition-colors" onclick="closeMenu()">Klienti</a>
+          </div>
+        </div>
       </div>
-      <div class="card-title">Wolframium</div>
-      <div class="card-desc">Výroba a recyklace wolframového pražence. Zpracování wolframových odpadů pro průmyslové využití.</div>
-      <div class="card-arrow">Navštívit</div>
-    </a>
+    </nav>
+  </header>
 
-    <div class="card no-link">
-      <div class="card-badge">Mateřská společnost</div>
-      <div class="card-icon">
-        <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="26,4 48,16 48,36 26,48 4,36 4,16" stroke="rgba(200,208,224,0.5)" stroke-width="1.2" fill="rgba(200,208,224,0.04)"/>
-          <polygon points="26,12 40,20 40,32 26,40 12,32 12,20" stroke="rgba(200,208,224,0.25)" stroke-width="0.8" fill="none"/>
-          <text x="26" y="31" font-family="Bebas Neue, sans-serif" font-size="16" fill="rgba(200,208,224,0.7)" text-anchor="middle" letter-spacing="1">K</text>
-        </svg>
+  <main>
+
+    <!-- ===================== HERO ===================== -->
+    <section
+      id="hero"
+      class="relative min-h-screen flex items-center overflow-hidden"
+      aria-label="Úvod — Karla Logistic"
+    >
+      <!-- Video pozadí -->
+      <video
+        class="absolute inset-0 w-full h-full object-cover"
+        autoplay
+        muted
+        loop
+        playsinline
+        aria-hidden="true"
+        preload="auto"
+      >
+        <source src="video-hero.mp4" type="video/mp4">
+      </video>
+
+      <!-- Scrim (kontrast ≥ 4.5:1 pro bílý text) -->
+      <div class="hero-scrim absolute inset-0" aria-hidden="true"></div>
+
+      <!-- Obsah -->
+      <div class="relative z-10 max-w-container mx-auto px-4 lg:px-8 pt-28 pb-20 w-full">
+        <div class="max-w-2xl">
+          <!-- Eyebrow label -->
+          <div
+            class="inline-flex items-center gap-2 mb-6"
+            aria-hidden="true"
+          >
+            <span class="block w-8 h-px bg-[#E01020]"></span>
+            <span class="text-[#E01020] text-xs font-semibold uppercase tracking-widest">Karla Logistic</span>
+          </div>
+
+          <!-- H1 — pouze jednou na stránce -->
+          <h1 class="text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-white leading-tight mb-6">
+            Skladujte chytře v srdci Moravskoslezského kraje.
+          </h1>
+
+          <p class="text-lg md:text-xl text-white/85 leading-relaxed mb-10 max-w-xl">
+            Poskytujeme moderní paletové skladování pro výrobní firmy z Česka i z Polska – spolehlivě, bezpečně a s dostatečnou kapacitou pro váš růst.
+          </p>
+
+          <a
+            href="#kontakt"
+            class="inline-block bg-[#E01020] text-white font-semibold px-8 py-4 text-base hover:bg-[#C00E1C] transition-colors duration-150"
+          >
+            Kontaktujte nás
+          </a>
+        </div>
       </div>
-      <div class="card-title">Karla spol.</div>
-      <div class="card-desc">Mateřská holdingová společnost sdružující průmyslové divize pod jednotnou strategii.</div>
+
+      <!-- Scroll indikátor -->
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:block" aria-hidden="true">
+        <div class="w-px h-12 bg-gradient-to-b from-white/0 to-white/40 mx-auto"></div>
+      </div>
+    </section>
+
+    <!-- ===================== O SKLADU ===================== -->
+    <section
+      id="o-skladu"
+      class="py-20 lg:py-28 bg-white"
+      aria-labelledby="h2-o-skladu"
+    >
+      <div class="max-w-container mx-auto px-4 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+          <!-- Text -->
+          <div data-reveal="left">
+            <h2
+              id="h2-o-skladu"
+              class="text-3xl lg:text-4xl font-bold text-[#E01020] mb-12 leading-tight"
+            >
+              Karla Logistics
+            </h2>
+            <p class="text-[#505050] leading-relaxed text-lg">
+              Logistické centrum Karla Logistic se nachází v Bruntále, ve strategické lokalitě Moravskoslezského kraje nedaleko polských hranic.
+            </p>
+          </div>
+
+          <!-- Zvýrazněný text -->
+          <div class="border-l-4 border-[#E01020] pl-8 py-2" data-reveal="right">
+            <p class="text-[#181818] text-xl lg:text-2xl font-semibold leading-snug">
+              Ve skladové hale se stabilním prostředím ukládáme materiál na europaletách i netypizovaných paletách. Moderní regálový systém poskytuje bezpečné skladování pro výrobní a průmyslové firmy.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== INFRASTRUKTURA ===================== -->
+    <section
+      id="infrastruktura"
+      class="py-20 lg:py-28 bg-[#181818]"
+      aria-labelledby="h2-infrastruktura"
+    >
+      <div class="max-w-container mx-auto px-4 lg:px-8">
+
+        <div class="mb-12" data-reveal>
+          <p class="text-[#E01020] text-xs font-semibold uppercase tracking-widest mb-3">Vybavení</p>
+          <h2
+            id="h2-infrastruktura"
+            class="text-3xl lg:text-4xl font-bold text-white"
+          >
+            Infrastruktura skladu
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/10" data-reveal data-delay="1">
+
+          <!-- Kapacita -->
+          <div class="bg-[#181818] p-10 lg:p-12 flex flex-col">
+            <div class="min-h-[4.5rem] lg:min-h-[5rem] flex items-start">
+              <div class="text-[#E01020] text-4xl lg:text-5xl font-extrabold leading-none tracking-tight whitespace-nowrap" data-countup="11000" data-format="thousands">11 000</div>
+            </div>
+            <div class="mt-3">
+              <div class="text-white font-semibold">Kapacita</div>
+              <div class="text-white/40 text-sm mt-0.5">paletových míst</div>
+            </div>
+          </div>
+
+          <!-- ISO 9001 -->
+          <div class="bg-[#181818] p-10 lg:p-12 flex flex-col">
+            <div class="min-h-[4.5rem] lg:min-h-[5rem] flex items-start">
+              <div class="text-[#E01020] text-4xl lg:text-5xl font-extrabold leading-none tracking-tight whitespace-nowrap" data-countup="9001" data-format="iso">ISO 9001</div>
+            </div>
+            <div class="mt-3">
+              <div class="text-white font-semibold">Certifikát kvality</div>
+              <div class="text-white/40 text-sm mt-0.5">systém managementu</div>
+            </div>
+          </div>
+
+          <!-- 15 let -->
+          <div class="bg-[#181818] p-10 lg:p-12 flex flex-col">
+            <div class="min-h-[4.5rem] lg:min-h-[5rem] flex items-start">
+              <div class="text-[#E01020] text-4xl lg:text-5xl font-extrabold leading-none tracking-tight whitespace-nowrap" data-countup="15">15</div>
+            </div>
+            <div class="mt-3">
+              <div class="text-white font-semibold">Let zkušeností</div>
+              <div class="text-white/40 text-sm mt-0.5">v logistice a skladování</div>
+            </div>
+          </div>
+
+          <!-- Vytíženost -->
+          <div class="bg-[#E01020] p-10 lg:p-12 flex flex-col">
+            <div class="min-h-[4.5rem] lg:min-h-[5rem] flex items-start">
+              <div class="text-white text-4xl lg:text-5xl font-extrabold leading-none tracking-tight whitespace-nowrap" data-countup="60" data-format="percent">60 %</div>
+            </div>
+            <div class="mt-3">
+              <div class="text-white font-semibold">Aktuální vytíženost</div>
+              <div class="text-white/70 text-sm mt-0.5">volná kapacita k dispozici</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== POLOHA ===================== -->
+    <section
+      id="poloha"
+      class="py-20 lg:py-28 bg-white overflow-hidden"
+      aria-labelledby="h2-poloha"
+    >
+      <div class="max-w-container mx-auto px-4 lg:px-8 mb-12" data-reveal>
+        <p class="text-[#E01020] text-xs font-semibold uppercase tracking-widest mb-3">Dopravní napojení</p>
+        <h2
+          id="h2-poloha"
+          class="text-3xl lg:text-4xl font-bold text-[#181818]"
+        >
+          Poloha a dopravní dostupnost
+        </h2>
+      </div>
+
+      <div class="max-w-container mx-auto px-4 lg:px-8">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+          <div class="border-l-2 border-[#E01020] pl-5 py-2" data-reveal>
+            <span class="bg-[#E01020] text-white text-xs font-bold px-2 py-0.5 uppercase tracking-wider inline-block mb-2">D1</span>
+            <div class="font-bold text-[#181818] text-sm leading-snug mb-2">Opavský obchvat</div>
+            <p class="text-[#505050] text-sm leading-relaxed">Přímé napojení směrem na Opavu a dál k dálnici D1 usnadňuje distribuci zboží do celé Moravy.</p>
+          </div>
+
+          <div class="border-l-2 border-[#181818]/20 pl-5 py-2" data-reveal data-delay="1">
+            <span class="bg-[#181818] text-white text-xs font-bold px-2 py-0.5 uppercase tracking-wider inline-block mb-2">69 KM</span>
+            <div class="font-bold text-[#181818] text-sm leading-snug mb-2">Ostravská aglomerace</div>
+            <p class="text-[#505050] text-sm leading-relaxed">Efektivní obsluha velkých průmyslových a logistických areálů v celém regionu.</p>
+          </div>
+
+          <div class="border-l-2 border-[#E01020] pl-5 py-2" data-reveal data-delay="2">
+            <span class="bg-[#E01020] text-white text-xs font-bold px-2 py-0.5 uppercase tracking-wider inline-block mb-2">PL</span>
+            <div class="font-bold text-[#181818] text-sm leading-snug mb-2">Polská hranice – Głubczyce / Pietrowice (cca 35–40 km)</div>
+            <p class="text-[#505050] text-sm leading-relaxed">Napojení na silnici I/45 a bývalý hraniční přechod Krnov – Pietrowice, odkud pokračuje polská silnice č. 38 směrem na Głubczyce.</p>
+          </div>
+
+          <div class="border-l-2 border-[#181818]/20 pl-5 py-2" data-reveal data-delay="3">
+            <span class="bg-[#181818] text-white text-xs font-bold px-2 py-0.5 uppercase tracking-wider inline-block mb-2">I/45 · I/11</span>
+            <div class="font-bold text-[#181818] text-sm leading-snug mb-2">Tranzitní tah Olomouc – Opava – Ostrava</div>
+            <p class="text-[#505050] text-sm leading-relaxed">Město leží na důležitých tazích I/45 a I/11, které tvoří severojižní koridor mezi Olomoucí, Opavou, Ostravou a polským příhraničím.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================== KLIENTI ===================== -->
+    <section
+      id="klienti"
+      class="py-10 lg:py-14 bg-[#F5F5F5]"
+      aria-labelledby="h2-klienti"
+    >
+      <div class="max-w-container mx-auto px-4 lg:px-8">
+
+        <div class="text-center mb-12" data-reveal>
+          <p class="text-[#E01020] text-xs font-semibold uppercase tracking-widest mb-3">Reference</p>
+          <h2
+            id="h2-klienti"
+            class="text-3xl lg:text-4xl font-bold text-[#181818]"
+          >
+            Naši klienti
+          </h2>
+        </div>
+
+        <ul
+          class="grid grid-cols-2 md:grid-cols-4 gap-8 list-none"
+          aria-label="Seznam klientů"
+        >
+          <li class="flex items-center justify-center py-6" data-reveal>
+            <img src="1.png" alt="Klient 1"
+              class="max-h-36 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300" loading="lazy">
+          </li>
+          <li class="flex items-center justify-center py-6" data-reveal data-delay="1">
+            <img src="2.png" alt="Klient 2"
+              class="max-h-36 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300" loading="lazy">
+          </li>
+          <li class="flex items-center justify-center py-6" data-reveal data-delay="2">
+            <img src="3.png" alt="Klient 3"
+              class="max-h-36 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300" loading="lazy">
+          </li>
+          <li class="flex items-center justify-center py-6" data-reveal data-delay="3">
+            <img src="4.png" alt="Klient 4"
+              class="max-h-36 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300" loading="lazy">
+          </li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- ===================== KONTAKT ===================== -->
+    <section
+      id="kontakt"
+      class="py-20 lg:py-28 bg-[#181818]"
+      aria-labelledby="h2-kontakt"
+    >
+      <div class="max-w-container mx-auto px-4 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20">
+
+          <!-- Kontaktní informace -->
+          <div data-reveal="left">
+            <p class="text-[#E01020] text-xs font-semibold uppercase tracking-widest mb-3">Kontakt</p>
+            <h2
+              id="h2-kontakt"
+              class="text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight"
+            >
+              Kontaktujte nás
+            </h2>
+            <p class="text-white/70 leading-relaxed mb-10 text-lg">
+              Spojte se s námi. Rádi pro vás vytvoříme nabídku, která podpoří vaše podnikání:
+            </p>
+
+            <address class="not-italic space-y-7">
+
+              <div>
+                <div class="text-white/40 text-xs uppercase tracking-widest mb-1.5">Adresa</div>
+                <a
+                  href="https://maps.google.com/?q=Zahradní+2004/46D,+792+01+Bruntál"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-white hover:text-[#E01020] transition-colors duration-150 text-base"
+                >
+                  Zahradní 2004/46D, 792 01 Bruntál 1
+                </a>
+              </div>
+
+              <div>
+                <div class="text-white/40 text-xs uppercase tracking-widest mb-1.5">Telefon</div>
+                <div class="space-y-1">
+                  <a href="tel:+420602565432" class="block text-white hover:text-[#E01020] transition-colors duration-150">
+                    +420 602 565 432
+                  </a>
+                  <a href="tel:+420777164097" class="block text-white hover:text-[#E01020] transition-colors duration-150">
+                    +420 777 164 097
+                  </a>
+                </div>
+              </div>
+
+              <div>
+                <div class="text-white/40 text-xs uppercase tracking-widest mb-1.5">E-mail</div>
+                <a
+                  href="mailto:karla@logistics.cz"
+                  class="text-white hover:text-[#E01020] transition-colors duration-150"
+                >
+                  karla@logistics.cz
+                </a>
+              </div>
+
+              <div>
+                <div class="text-white/40 text-xs uppercase tracking-widest mb-1.5">Pracovní doba</div>
+                <div class="text-white">Pondělí–pátek: 6:00–15:00</div>
+              </div>
+
+            </address>
+          </div>
+
+          <!-- Formulář -->
+          <div data-reveal="right">
+            <form
+              id="contact-form"
+              novalidate
+              class="space-y-5"
+              aria-label="Kontaktní formulář — odeslat poptávku"
+            >
+              <!-- Honeypot (anti-spam) -->
+              <div class="hp-field" aria-hidden="true">
+                <label for="hp-website">Web</label>
+                <input
+                  type="text"
+                  id="hp-website"
+                  name="website"
+                  tabindex="-1"
+                  autocomplete="off"
+                >
+              </div>
+
+              <!-- Název firmy (povinné) -->
+              <div>
+                <label for="firma" class="block text-white text-sm font-medium mb-1.5">
+                  Název firmy
+                  <span class="text-[#E01020]" aria-label="povinné pole">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="firma"
+                  name="firma"
+                  required
+                  maxlength="200"
+                  autocomplete="organization"
+                  class="form-input w-full bg-white/10 border border-white/20 text-white px-4 py-3 text-sm transition-colors duration-150"
+                  placeholder="Název vaší firmy"
+                  aria-required="true"
+                  aria-describedby="firma-error"
+                >
+                <span id="firma-error" class="hidden text-[#E01020] text-xs mt-1.5 block" role="alert"></span>
+              </div>
+
+              <!-- Kontaktní osoba (povinné) -->
+              <div>
+                <label for="osoba" class="block text-white text-sm font-medium mb-1.5">
+                  Kontaktní osoba
+                  <span class="text-[#E01020]" aria-label="povinné pole">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="osoba"
+                  name="osoba"
+                  required
+                  maxlength="200"
+                  autocomplete="name"
+                  class="form-input w-full bg-white/10 border border-white/20 text-white px-4 py-3 text-sm transition-colors duration-150"
+                  placeholder="Jméno a příjmení"
+                  aria-required="true"
+                  aria-describedby="osoba-error"
+                >
+                <span id="osoba-error" class="hidden text-[#E01020] text-xs mt-1.5 block" role="alert"></span>
+              </div>
+
+              <!-- E-mail (povinné) -->
+              <div>
+                <label for="email" class="block text-white text-sm font-medium mb-1.5">
+                  E-mail
+                  <span class="text-[#E01020]" aria-label="povinné pole">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  maxlength="320"
+                  autocomplete="email"
+                  class="form-input w-full bg-white/10 border border-white/20 text-white px-4 py-3 text-sm transition-colors duration-150"
+                  placeholder="vas@firma.cz"
+                  aria-required="true"
+                  aria-describedby="email-error"
+                >
+                <span id="email-error" class="hidden text-[#E01020] text-xs mt-1.5 block" role="alert"></span>
+              </div>
+
+              <!-- Telefon (volitelné) -->
+              <div>
+                <label for="telefon" class="block text-white text-sm font-medium mb-1.5">
+                  Telefon
+                  <span class="text-white/40 text-xs font-normal">(nepovinné)</span>
+                </label>
+                <input
+                  type="tel"
+                  id="telefon"
+                  name="telefon"
+                  maxlength="30"
+                  autocomplete="tel"
+                  class="form-input w-full bg-white/10 border border-white/20 text-white px-4 py-3 text-sm transition-colors duration-150"
+                  placeholder="+420 000 000 000"
+                  aria-describedby="telefon-error"
+                >
+                <span id="telefon-error" class="hidden text-[#E01020] text-xs mt-1.5 block" role="alert"></span>
+              </div>
+
+              <!-- Zpráva -->
+              <div>
+                <label for="zprava" class="block text-white text-sm font-medium mb-1.5">
+                  Zpráva
+                  <span class="text-white/40 text-xs font-normal">(nepovinné)</span>
+                </label>
+                <textarea
+                  id="zprava"
+                  name="zprava"
+                  rows="4"
+                  maxlength="2000"
+                  class="form-input w-full bg-white/10 border border-white/20 text-white px-4 py-3 text-sm transition-colors duration-150 resize-none"
+                  placeholder="Popište vaše požadavky nebo otázky…"
+                ></textarea>
+              </div>
+
+              <!-- Služby — TODO -->
+              <!--
+                TODO: Přidat checkbox group se službami.
+                Hodnoty/labely doplnit do docs/content-source.md a pak renderovat zde.
+                Příklad struktury:
+                <fieldset>
+                  <legend class="text-white text-sm font-medium mb-2">Mám zájem o</legend>
+                  <label><input type="checkbox" name="sluzby" value="TODO"> TODO</label>
+                </fieldset>
+              -->
+
+              <!-- GDPR souhlas (povinné) -->
+              <div>
+                <div class="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    id="gdpr"
+                    name="gdpr"
+                    required
+                    class="mt-0.5 w-4 h-4 flex-shrink-0 accent-[#E01020] cursor-pointer"
+                    aria-required="true"
+                    aria-describedby="gdpr-error"
+                  >
+                  <label for="gdpr" class="text-white/70 text-sm leading-relaxed cursor-pointer">
+                    Souhlasím se zpracováním svých osobních údajů společností Karla Logistic za účelem vyřízení poptávky.
+                    <a
+                      href="TODO: URL zásad ochrany osobních údajů"
+                      class="text-[#E01020] hover:underline"
+                      target="_blank"
+                      rel="noopener"
+                    >Zásady ochrany osobních údajů</a>.
+                    <span class="text-[#E01020]" aria-label="povinné pole">*</span>
+                  </label>
+                </div>
+                <span id="gdpr-error" class="hidden text-[#E01020] text-xs mt-1.5 ml-7 block" role="alert"></span>
+              </div>
+
+              <!-- Submit -->
+              <button
+                type="submit"
+                id="submit-btn"
+                class="w-full bg-[#E01020] text-white font-semibold py-4 text-sm hover:bg-[#C00E1C] transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Odeslat poptávku
+              </button>
+
+              <!-- Stavové zprávy -->
+              <div
+                id="form-success"
+                class="hidden bg-green-500/15 border border-green-500/30 text-green-400 px-4 py-3 text-sm"
+                role="status"
+                aria-live="polite"
+              >
+                Zpráva byla úspěšně odeslána. Brzy se vám ozveme.
+              </div>
+              <div
+                id="form-error"
+                class="hidden bg-[#E01020]/15 border border-[#E01020]/30 text-[#E01020] px-4 py-3 text-sm"
+                role="alert"
+                aria-live="assertive"
+              >
+                Při odesílání nastala chyba. Kontaktujte nás prosím na
+                <a href="tel:+420602565432" class="underline">+420 602 565 432</a>
+                nebo
+                <a href="mailto:karla@logistics.cz" class="underline">karla@logistics.cz</a>.
+              </div>
+
+              <p class="text-white/30 text-xs">
+                Pole označená <span class="text-[#E01020]">*</span> jsou povinná.
+              </p>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== PATIČKA ===================== -->
+  <footer class="bg-[#0F0F0F] py-8 border-t border-white/5" aria-label="Zápatí stránky">
+    <div class="max-w-container mx-auto px-4 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="Untitled design (3).png" alt="Karla Logistic" class="h-6 w-auto" loading="lazy" width="24" height="24">
+        <span class="text-white/40 text-sm">Karla Logistic &nbsp;·&nbsp; Zahradní 2004/46D, 792 01 Bruntál 1</span>
+      </div>
+      <span class="text-white/25 text-xs">© 2026 Karla spol. s r.o. — Všechna práva vyhrazena</span>
     </div>
+  </footer>
 
-    <div class="card" style="opacity:0.55; cursor:default;">
-      <div class="card-badge soon">Brzy</div>
-      <div class="card-icon">
-        <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="4" y="18" width="36" height="20" rx="2" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.05)"/>
-          <path d="M40 24 L48 28 L48 38 L40 38" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.08)"/>
-          <circle cx="14" cy="40" r="4" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.1)"/>
-          <circle cx="36" cy="40" r="4" stroke="#cc1111" stroke-width="1.2" fill="rgba(204,17,17,0.1)"/>
-          <path d="M8 18 L12 10 L28 10 L28 18" stroke="#cc1111" stroke-width="1" stroke-dasharray="3 2"/>
-        </svg>
-      </div>
-      <div class="card-title">Karla Logistics</div>
-      <div class="card-desc">Logistická divize holdingu. Stránky jsou aktuálně ve vývoji a budou brzy dostupné.</div>
-    </div>
 
-  </div>
+  <!-- ===================== JAVASCRIPT ===================== -->
+  <script>
+    // ── Scroll reveal ─────────────────────────────────────────────────
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          } else {
+            entry.target.classList.remove('is-visible');
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -56px 0px' });
+      document.querySelectorAll('[data-reveal]').forEach(function (el) {
+        io.observe(el);
+      });
+    }());
 
-  <div class="bottom-line"></div>
-  <div class="footer-text">© 2026 Karla spol. s r.o. — Všechna práva vyhrazena</div>
-</div>
+    // ── Count-up animace ──────────────────────────────────────────────
+    (function () {
+      var DURATION = 1600;
+
+      function formatValue(n, format) {
+        var rounded = Math.round(n);
+        if (format === 'thousands') {
+          if (rounded >= 1000) {
+            return Math.floor(rounded / 1000) + '\u00a0' + String(rounded % 1000).padStart(3, '0');
+          }
+          return String(rounded);
+        }
+        if (format === 'percent') return rounded + '\u00a0%';
+        if (format === 'iso')     return 'ISO\u00a0' + rounded;
+        return String(rounded);
+      }
+
+      function runCountUp(el) {
+        var target = parseInt(el.dataset.countup, 10);
+        var format = el.dataset.format || '';
+        var start  = performance.now();
+        var raf;
+
+        function step(now) {
+          var t       = Math.min((now - start) / DURATION, 1);
+          var eased   = 1 - Math.pow(1 - t, 3);       /* cubic ease-out */
+          el.textContent = formatValue(eased * target, format);
+          if (t < 1) { raf = requestAnimationFrame(step); }
+        }
+
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(step);
+        el._countRaf = raf;
+      }
+
+      function resetCountUp(el) {
+        if (el._countRaf) cancelAnimationFrame(el._countRaf);
+        el.textContent = formatValue(0, el.dataset.format || '');
+      }
+
+      var cio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            runCountUp(entry.target);
+          } else {
+            resetCountUp(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      document.querySelectorAll('[data-countup]').forEach(function (el) {
+        cio.observe(el);
+      });
+    }());
+
+    // ── Mobilní menu ──────────────────────────────────────────────────
+    const menuBtn  = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const iconOpen  = document.getElementById('icon-open');
+    const iconClose = document.getElementById('icon-close');
+
+    function closeMenu() {
+      mobileMenu.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+    }
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(isOpen));
+      iconOpen.classList.toggle('hidden', isOpen);
+      iconClose.classList.toggle('hidden', !isOpen);
+    });
+
+    // Zavřít menu při kliku mimo
+    document.addEventListener('click', (e) => {
+      if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+        closeMenu();
+      }
+    });
+
+    // ── Formulář ─────────────────────────────────────────────────────
+    const form       = document.getElementById('contact-form');
+    const submitBtn  = document.getElementById('submit-btn');
+    const successMsg = document.getElementById('form-success');
+    const errorMsg   = document.getElementById('form-error');
+
+    /** Definice validačních pravidel */
+    const rules = {
+      firma:   { required: true,  maxLength: 200, label: 'Název firmy' },
+      osoba:   { required: true,  maxLength: 200, label: 'Kontaktní osoba' },
+      email:   { required: true,  maxLength: 320, type: 'email', label: 'E-mail' },
+      telefon: { required: false, maxLength: 30,  label: 'Telefon' },
+      gdpr:    { required: true,  type: 'checkbox', label: 'Souhlas GDPR' },
+    };
+
+    function showError(id, msg) {
+      const errEl = document.getElementById(id + '-error');
+      const input = document.getElementById(id);
+      if (!errEl || !input) return;
+      errEl.textContent = msg;
+      errEl.classList.remove('hidden');
+      input.setAttribute('aria-invalid', 'true');
+      input.style.borderColor = '#E01020';
+    }
+
+    function clearError(id) {
+      const errEl = document.getElementById(id + '-error');
+      const input = document.getElementById(id);
+      if (!errEl || !input) return;
+      errEl.textContent = '';
+      errEl.classList.add('hidden');
+      input.setAttribute('aria-invalid', 'false');
+      input.style.borderColor = '';
+    }
+
+    function validateField(id) {
+      const rule  = rules[id];
+      if (!rule) return true;
+      const input = document.getElementById(id);
+      if (!input) return true;
+
+      if (rule.type === 'checkbox') {
+        if (rule.required && !input.checked) {
+          showError(id, 'Souhlas se zpracováním osobních údajů je povinný.');
+          return false;
+        }
+      } else {
+        const val = input.value.trim();
+        if (rule.required && !val) {
+          showError(id, `Pole „${rule.label}" je povinné.`);
+          return false;
+        }
+        if (val && rule.maxLength && val.length > rule.maxLength) {
+          showError(id, `Maximální délka je ${rule.maxLength} znaků.`);
+          return false;
+        }
+        if (rule.type === 'email' && val) {
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) {
+            showError(id, 'Zadejte platnou e-mailovou adresu (např. jmeno@firma.cz).');
+            return false;
+          }
+        }
+      }
+      clearError(id);
+      return true;
+    }
+
+    // onBlur validace
+    Object.keys(rules).forEach(id => {
+      const input = document.getElementById(id);
+      if (!input) return;
+      const event = rules[id].type === 'checkbox' ? 'change' : 'blur';
+      input.addEventListener(event, () => validateField(id));
+    });
+
+    // onSubmit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Honeypot check
+      const hp = form.querySelector('input[name="website"]');
+      if (hp && hp.value.trim()) return; // bot detected — tichý fail
+
+      // Validace všech polí
+      let valid = true;
+      Object.keys(rules).forEach(id => {
+        if (!validateField(id)) valid = false;
+      });
+      if (!valid) return;
+
+      // Skrytí předchozích stavových zpráv
+      successMsg.classList.add('hidden');
+      errorMsg.classList.add('hidden');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Odesílám…';
+
+      try {
+        // TODO: Nahradit skutečnou URL endpointu (server-side handler)
+        // Příklad: Formspree, vlastní API route, nebo Netlify Function
+        const FORM_ENDPOINT = 'TODO: FORM_ACTION_URL';
+
+        if (FORM_ENDPOINT.startsWith('TODO')) {
+          // Vývojový fallback — simulace úspěchu
+          throw new Error('Endpoint not configured');
+        }
+
+        const response = await fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firma:               document.getElementById('firma').value.trim(),
+            osoba:               document.getElementById('osoba').value.trim(),
+            email:               document.getElementById('email').value.trim(),
+            telefon:             document.getElementById('telefon').value.trim(),
+            zprava:              document.getElementById('zprava').value.trim(),
+            submittedAt:         new Date().toISOString(),
+            consentTextVersion:  'TODO: definovat verzi', // TODO
+          }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        form.reset();
+        successMsg.classList.remove('hidden');
+        submitBtn.textContent = 'Odesláno ✓';
+      } catch (err) {
+        console.error('Form submit error:', err);
+        errorMsg.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Odeslat poptávku';
+      }
+    });
+  </script>
+
 </body>
 </html>
